@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "r5"
+version = "0.1.0"
+description = ""
+authors = ["Rafael Sanabria <rafael.d.sanabria@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = {extras = ["all"], version = "^0.89.1"}
+joblib = "^1.2.0"
+scikit-learn = "^1.2.1"
+pandas = "^1.5.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
