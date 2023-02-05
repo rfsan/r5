@@ -2,24 +2,31 @@ from typing import List
 from fastapi import FastAPI
 from fastapi.encoders import jsonable_encoder
 import pandas as pd
-from pathlib import Path
 from pydantic import BaseModel
-import joblib
+
+from models.predict import get_proba
 
 app = FastAPI()
-model = joblib.load('./model/model_binary.dat.gz')
 
 # TYPES
 
 class OneInput(BaseModel):
-    Sex: str
     AccidentArea: str
+    Sex: str
+    VehicleCategory: str
+    BasePolicy: str
+    Yearr: int
+    AgeOfPolicyHolder: str
 
     class Config:
         schema_extra = {
             'example': {
+                "AccidentArea": 'Rural',
                 "Sex": 'Male', 
-                "AccidentArea": 'Rural'
+                "VehicleCategory": 'Sport',
+                'BasePolicy': 'Liability',
+                'Yearr': 1996,
+                'AgeOfPolicyHolder': '51 to 65'
             }
         }
 
@@ -31,12 +38,20 @@ class Input(BaseModel):
             'example': {
                 "inputs": [
                     {
+                        "AccidentArea": 'Rural',
                         "Sex": 'Male', 
-                        "AccidentArea": 'Rural'
+                        "VehicleCategory": 'Sport',
+                        'BasePolicy': 'Liability',
+                        'Yearr': 1996,
+                        'AgeOfPolicyHolder': '51 to 65'
                     },
                     {
-                        "Sex": 'Female',
-                        "AccidentArea": 'Urban'
+                        "AccidentArea": 'Urban',
+                        "Sex": 'Male', 
+                        "VehicleCategory": 'Utility',
+                        'BasePolicy': 'Collision',
+                        'Yearr': 1994,
+                        'AgeOfPolicyHolder': '16 to 17'
                     }
                 ]
             }
@@ -47,14 +62,12 @@ class Output(BaseModel):
 
 # MODEL FUNCTIONS
 
-def get_model_response(input):
+def get_model_proba(input):
     X = pd.DataFrame(jsonable_encoder(input.__dict__['inputs']))
-    pred = model.predict_proba(X)[:,1].round(2).tolist()
-
-    return {'prediction': pred}
+    return {'prediction': get_proba(X)}
 
 # API
 
 @app.post("/predict", response_model=Output)
 async def model_predict(input: Input):
-    return get_model_response(input)
+    return get_model_proba(input)
