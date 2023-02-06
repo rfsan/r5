@@ -1,6 +1,6 @@
 # Prueba R5 - Rafael Sanabria
 
-[Aquí](https://r5-ah9a.onrender.com/docs) pueden interactuar con el modelo en producción.
+[Aquí](https://r5-ah9a.onrender.com/docs) pueden interactuar con el modelo en producción. Se puede demorar en cargar la primera vez que se entra al link en un tiempo.
 
 ## Parte 1 - PostgreSQL
 
